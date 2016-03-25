@@ -1,0 +1,75 @@
+
+LIBRARY "   Eng ineering      Library" 
+{
+        STAFF "  Tue Rod Chan" {
+		POSITION "Tue"
+		EMAIL rod@auckland.ac.nz
+		TYPE Part-time
+		RATE $1985.00  
+    }
+    BUILDING    312
+    WEBSITE "https://www.library.auckland.ac.nz/about-us/libraries/engineering-"
+    TIMEOFYEAR "Summer School" {
+ 
+        START Tuesday, 5 January   2016
+       END    Sunday, 28 February 2016
+            HOURS    Mon, Mon,   Tue   ,Thu,   Fri   (9:00 AM to    5:00   PM)
+        HOURS Wed, Wed, Wed, Wed (9:00 AM to 8:00 PM)
+	HOURS Sat,   Sun    (   CLOSED)
+    }
+    STAFF "  Tue Rod Chan" {
+		POSITION " "
+		EMAIL r.od.9.78@auckland.ac.nz
+		TYPE Full-time
+		RATE $1985  
+				EMAIL r.od.9.78@auc-345kland.ac.nz
+    }
+    BOOKCOLLECTION "Mon Fiction" {
+		BOOK 8jh30st2 {
+		    TITLE " "
+		    AUTHOR " Tue,  Ronald P.  Ronald P."
+		}
+    }
+    TIMEOFYEAR "Summer School" {
+ 
+        START Tuesday  , 5 January   2016
+       END    Sunday, 28 February 2016
+            HOURS    Mon, Mon,   Tue   ,Thu,   Fri   (9:00 AM to    5:00   PM)
+        HOURS Wed, Wed, Wed, Wed (9:00 AM to 8:00 PM)
+	HOURS Sat,   Sun    (   CLOSED)
+    }
+        BOOKCOLLECTION "test" {
+		BOOK 8jhfg0s1 {
+		    TITLE "   Writ  a bced"
+		    AUTHOR "  Mak,   Ronald    P."
+		    AUTHOR "Pak,    B.  P."
+		}
+		
+	BOOK 8jhdg0s1 {
+		    TITLE "   Writ  a bced"
+		    AUTHOR "  Mon,   Tue Ronald    P."
+		    AUTHOR "   Pak, A"
+		}
+    }
+    
+    
+     BOOKCOLLECTION " M on Fiction" {
+		BOOK 8jh30st2 {
+		    TITLE "   Writing   Compilers and Interpreters: A Software Engineering Approach"
+		    AUTHOR " Tue,  Ronald P.  Ronald P."
+		}
+    }
+        BOOKCOLLECTION "test" {
+		BOOK 8jhfg0s1 {
+		    TITLE "   Writ  a bced"
+		    AUTHOR "  Mak,   Ronald    P."
+		    AUTHOR " Pak,    B.  P. "
+		}
+		
+	BOOK 8jhdg0s1 {
+		    TITLE "   Writ  a bced"
+		    AUTHOR "  Pak  ,   Tue Ronald  A.W. Ronad W.  P."
+		    AUTHOR "   Pak,    B.  P."
+		}
+    }
+}

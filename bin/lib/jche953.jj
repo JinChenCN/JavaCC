@@ -1,0 +1,270 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = false;}PARSER_BEGIN(LibParser)package lib;
+public class LibParser
+{
+  	private String LibName;
+	private String TimeOfYearName;
+	private String StaffName;
+	private String BookID;
+	
+}PARSER_END(LibParser)SKIP :{  < SPACE: (" " | "\r" | "\t" | "\n")+ >}TOKEN : /* LITERALS */
+{
+  < LIBRARY : "LIBRARY" >
+| < WEBSITE : "WEBSITE" >
+| < BUILDING : "BUILDING" >
+| < TIMEOFYEAR : "TIMEOFYEAR" >
+| < START : "START" >
+| < END : "END" >
+| < HOURS : "HOURS" >
+| < AM : "AM" >
+| < PM : "PM" >
+| < TO : "to" >
+| < CLOSED : "CLOSED" >
+| < STAFF : "STAFF" >
+| < POSITION : "POSITION" >
+| < EMAIL : "EMAIL" >
+| < TYPE : "TYPE" >
+| < TYPE_VALUE : "Full-time" | "Part-time" >
+| < RATE : "RATE" >
+| < BOOKCOLLECTION : "BOOKCOLLECTION" >
+| < BOOK : "BOOK" >
+| < TITLE : "TITLE" >
+| < AUTHOR : "AUTHOR" >
+}
+
+TOKEN : /* PUNCTUATIONS */
+{
+  < DOUBLE_QUOTE : "\"">
+| < COMMA : "," >
+| < LB: "{" >
+| < RB : "}" >
+| < FULL_STOP : "." >
+| < DOLLAR : "$" >
+| < LP : "(" >
+| < RP : ")" >
+| < #AT : "@" >
+}
+
+TOKEN : 
+{
+  < NAME_GENERAL : < DOUBLE_QUOTE > ( ["a"-"z","A"-"Z"," "] )+ < DOUBLE_QUOTE > >
+| < #DIGIT : ["0"-"9"] >
+| < BUILDING_ENTRY : (< DIGIT >){3} >
+| < #PROTOCOL : "http://" | "https://" >
+| < WEBSITE_ENTRY : < DOUBLE_QUOTE > < PROTOCOL > (["a"-"z","A"-"Z","_","-",".","/"])* < DOUBLE_QUOTE > >
+| < DAY_SHORT : "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun" >
+| < DAY : "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday" >
+| < MONTH : "January" | "February" | "March" | "April" | "May" | "June" | "July" | "August"
+    | "September" | "October" | "November" | "December" >
+| < DATE : (< DIGIT >){1,2} >
+| < YEAR : (< DIGIT >){4}  >
+| < TIME : (< DIGIT >){1,2} ":" (< DIGIT >){2} >
+| < #LETTER_OR_NUMBER : ["a"-"z","A"-"Z","0"-"9"] >
+| < #EMAIL_LOCAL : (< LETTER_OR_NUMBER >)+ ((< FULL_STOP >)? < LETTER_OR_NUMBER >)* >
+| < #LETTER_NUMBER_HYPHEN : ["a"-"z","A"-"Z","0"-"9","-"] >
+| < #EMAIL_DOMAIN : (< LETTER_NUMBER_HYPHEN >)+ ((< FULL_STOP >)? < LETTER_NUMBER_HYPHEN >)*  >
+| < EMAIL_VALUE : < EMAIL_LOCAL> < AT > < EMAIL_DOMAIN > >
+| < RATE_VALUE :  < DOLLAR > (< DIGIT >)+ ( < FULL_STOP > (< DIGIT >){2} )? >
+| < BOOK_ID : (< LETTER_OR_NUMBER >){8} >
+| < BOOK_TITLE : < DOUBLE_QUOTE > (["a"-"z","A"-"Z","0"-"9", "-", ":", " "])+ < DOUBLE_QUOTE > >
+| < #UPPER_LETTER : ["A"-"Z"] >
+| < #LETTER : ["a"-"z","A"-"Z"] >
+| < AUTHOR_NAME : < UPPER_LETTER > (< LETTER >)* >
+| < AUTHOR_NAME_INITIAL : < UPPER_LETTER > < FULL_STOP > >
+}
+
+void Library() : {} /* Root non-terminal */
+{
+  Lib() < EOF > 
+}
+
+void Lib() : {}
+{
+    < LIBRARY > < NAME_GENERAL > { LibName = token.image; } < LB > LibInfo() < RB >
+}
+
+void LibInfo() : { int[] counter = new int[5]; }
+{
+  (
+    Website()
+  {
+    counter[0]++;
+    if (counter[0] > 1)
+  		{ throw new ParseException("There should be exactly one WEBSITE entry in LIBRARY "+ LibName + ". Found more than one on line " + token.beginLine); }
+  }
+  | Building()
+  {
+    counter[1]++;
+    if (counter[1] > 1)
+  		{ throw new ParseException("There should be exactly one BUILDING entry in LIBRARY "+ LibName + ". Found more than one on line " + token.beginLine); }
+  }
+  | TimeOfYear()
+  {
+    counter[2]++;
+  }
+  | Staff()
+  {
+    counter[3]++;
+  }
+  | BookCollection()
+  {
+    counter[4]++;
+  }
+  )+
+  {
+    if (counter[0] == 0)
+	{ throw new ParseException("There should be one WEBSITE entry in LIBRARY "+ LibName + "."); }
+	if (counter[1] == 0)
+	{ throw new ParseException("There should be one BUILDING entry in LIBRARY "+ LibName + "."); }
+    if (counter[2] < 1)
+    { throw new ParseException("There should be at least one TIMEOFYEAR entry in LIBRARY "+ LibName + "."); }
+    if (counter[3] < 1)
+    { throw new ParseException("There should be at least one STAFF entry in LIBRARY "+ LibName + "."); }
+    if (counter[4] < 1)
+    { throw new ParseException("There should be at least one BOOKCOLLECTION entry in LIBRARY "+ LibName + "."); }
+  }
+}
+
+void Website() : {}
+{
+  < WEBSITE > < WEBSITE_ENTRY > 
+}
+
+void Building() : {}
+{
+    < BUILDING > < BUILDING_ENTRY >
+}
+
+void TimeOfYear() : {}
+{
+    < TIMEOFYEAR > < NAME_GENERAL >  { TimeOfYearName = token.image; } 
+    < LB > TimeOfYearInfo() < RB >
+}
+
+void TimeOfYearInfo() : { int[] counter_timeOfYear = new int[2]; }
+{
+	Start() {counter_timeOfYear[0]++;
+	if (counter_timeOfYear[0] > 1)
+	    { throw new ParseException("There should be exactly one START time in TIMEOFYEAR "+ TimeOfYearName + ". Found more than one on line " + token.beginLine); }}
+	End() {counter_timeOfYear[1]++;
+	if (counter_timeOfYear[1] > 1)
+	    { throw new ParseException("There should be exactly one END time in TIMEOFYEAR "+ TimeOfYearName + ". Found more than one on line " + token.beginLine); }}
+	(Hours())+
+    {
+	    if (counter_timeOfYear[0] == 0)
+		{ throw new ParseException("There should be one START time in TIMEOFYEAR "+ TimeOfYearName + "."); }
+		if (counter_timeOfYear[1] == 0)
+		{ throw new ParseException("There should be one END time in TIMEOFYEAR "+ TimeOfYearName + "."); }   
+    }
+}
+
+void Start() : {}
+{
+  < START > < DAY > < COMMA > < DATE > < MONTH > < YEAR >
+}
+
+void End() : {}
+{
+  < END > < DAY > < COMMA > < DATE > < MONTH > < YEAR >
+}
+
+void Hours() : {}
+{
+  < HOURS > HoursDay() < LP > ( (< TIME > (< AM > | < PM >) < TO > < TIME > (< AM > | < PM >) ) | < CLOSED > ) < RP > 
+}
+
+void HoursDay(): {}
+{
+  < DAY_SHORT > (< COMMA > < DAY_SHORT >)*
+}
+
+void Staff() : {}
+{
+    < STAFF > < NAME_GENERAL > { StaffName = token.image; } < LB > StaffInfo() < RB>
+}
+
+void StaffInfo() : { int[] counter_staff = new int[4]; }
+{
+    (
+	    Position() {counter_staff[0]++;
+	    if (counter_staff[0] > 1)
+		    { throw new ParseException("There should be exactly one POSITION in STAFF "+ StaffName + ". Found more than one on line " + token.beginLine); }}
+	    
+	    | Email() {counter_staff[1]++;}
+	    | Type() {counter_staff[2]++;
+	    if (counter_staff[2] > 1)
+		    { throw new ParseException("There should be exactly one TYPE in STAFF "+ StaffName + ". Found more than one on line " + token.beginLine); }}
+	    | Rate() {counter_staff[3]++;
+	    if (counter_staff[3] > 1)
+		    { throw new ParseException("There should be exactly one RATE in STAFF "+ StaffName + ". Found more than one on line " + token.beginLine); }}
+	)+
+    {
+      	if (counter_staff[0] == 0)
+	    { throw new ParseException("There should be one POSITION in STAFF "+ StaffName + "."); }
+	    if (counter_staff[1] < 1)
+	    { throw new ParseException("There should be at least one EMAIL in STAFF "+ StaffName + "."); }
+	    if (counter_staff[2] == 0)
+	    { throw new ParseException("There should be one TYPE in STAFF "+ StaffName + "."); }
+	    if (counter_staff[3] == 0)
+	    { throw new ParseException("There should be one RATE in STAFF "+ StaffName + "."); }	        
+	}
+}
+
+void Position() : {}
+{
+  < POSITION > < NAME_GENERAL >
+}
+
+void Email() : {}
+{
+  < EMAIL > < EMAIL_VALUE >
+}
+
+void Type() : {}
+{
+  < TYPE > < TYPE_VALUE>
+}
+
+void Rate() : {}
+{
+  < RATE > < RATE_VALUE >
+}
+
+void BookCollection() : {}
+{
+    < BOOKCOLLECTION > < NAME_GENERAL > < LB > (BookCollectionInfo())+ < RB>
+}
+
+void BookCollectionInfo() : {}
+{
+    < BOOK > < BOOK_ID >  { BookID = token.image; } < LB > BookInfo() < RB>
+}
+
+void BookInfo() : { int[] counter_book = new int[2]; }
+{
+   ( BookTitle() {counter_book[0]++;
+   if (counter_book[0] > 1)
+	    { throw new ParseException("There should be exactly one book TITLE in BOOK "+ BookID + ". Found more than one on line " + token.beginLine); }}
+   | Author() {counter_book[1]++;} )+
+   {
+     if (counter_book[0] == 0)
+	    { throw new ParseException("There should be one book TITLE in BOOK "+ BookID + "."); }
+     
+	    if (counter_book[1] < 1)
+	    { throw new ParseException("There should be at least one AUTHOR in BOOK "+ BookID + ". Found more than one on line " + token.beginLine); }	    	    
+	}
+}
+
+void BookTitle() : {}
+{
+  < TITLE > ( < BOOK_TITLE > | < NAME_GENERAL > )
+}
+
+void Author() : {}
+{
+  < AUTHOR >
+  < DOUBLE_QUOTE > (< AUTHOR_NAME > | < DAY > | < MONTH > | < DAY_SHORT >) < COMMA >
+  ( < AUTHOR_NAME >| < DAY > | < MONTH > | < DAY_SHORT > | < AUTHOR_NAME_INITIAL > )+ 
+  < DOUBLE_QUOTE >
+}
